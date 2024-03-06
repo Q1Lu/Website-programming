@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body {
+      margin: 0;
+      overflow: hidden;
+    }
+
+    canvas {
+      display: block;
+    }
+  </style>
+  <title>清潔海洋遊戲</title>
+</head>
+<body>
+  <canvas id="gameCanvas"></canvas>
+  <script>
+    var startTime = new Date();
+    var timerUpdater = setInterval(function() { print(90 - ((new Date()) - startTime))}, 1000)
+    const canvas = document.getElementById('gameCanvas');
+    const ctx = canvas.getContext('2d');
+
+    const game = {
+      score: 0,
+      pollutionThreshold: 10,
+      isGameOver: false,
+      time: 90000, // 初始时间为90秒
+    };
+
+    const player = {
+      x: canvas.width / 2,
+      y: canvas.height - 50,
+      width: 50,
+      height: 50,
+      speed: 5,
+    };
+
+    const cleanItems = [];
+    const pollutionItems = [];
+
+    function init() {
+      canvas.width = 800;
+      canvas.height = 600;
+
+      // 初始化遊戲元素
+      cleanItems.push(createItem());
+      pollutionItems.push(createItem());
+
+      update();
+    }
+
+    function createItem() {
+      return {
+        x: Math.random() * canvas.width,
+        y: Math.random() * canvas.height,
+        width: 30,
+        height: 30,
+        speed: Math.random() * 2 + 1,
+      };
+    }
+
+    function draw() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      // 繪製玩家
+      ctx.fillStyle = 'blue';
+      ctx.fillRect(player.x - player.width / 2, player.y - player.height / 2, player.width, player.height);
+
+      // 繪製乾淨物品
+      ctx.fillStyle = 'green';
+      cleanItems.forEach(item => ctx.fillRect(item.x - item.width / 2, item.y - item.height / 2, item.width, item.height));
+
+      // 繪製汙染物品
+      ctx.fillStyle = 'red';
+      pollutionItems.forEach(item => ctx.fillRect(item.x - item.width / 2, item.y - item.height / 2, item.width, item.height));
+
+      // 顯示分數
+      ctx.fillStyle = 'black';
+      ctx.font = '20px Arial';
+      ctx.fillText(`Score: ${game.score}`, 10, 30);
+
+      
+      if (game.isGameOver) {
+        ctx.fillText('Game Over', canvas.width / 2 - 50, canvas.height / 2);
+      }
+    }
+
+    function update() {
+      if (game.isGameOver) return;
+
+      movePlayer();
+      moveItems(cleanItems);
+      moveItems(pollutionItems);
+
+      checkCollisions();
+
+      draw();
+
+
+      
+    }
+
+    function movePlayer() {
+      if (keyState.ArrowLeft && player.x - player.width / 2 > 0) {
+        player.x -= player.speed;
+      }
+      if (keyState.ArrowRight && player.x + player.width / 2 < canvas.width) {
+        player.x += player.speed;
+      }
+      if (keyState.ArrowUp && player.y - player.height / 2 > 0) {
+        player.y -= player.speed;
+      }
+      if (keyState.ArrowDown && player.y + player.height / 2 < canvas.height) {
+        player.y += player.speed;
+      }
+    }
+
+    function moveItems(items) {
+        items.forEach(item => {
+        item.x += item.speed; // 將 y 改為 x
+
+        if (item.x - item.width / 2 > canvas.width) {
+        // 重新設定物品位置
+        item.x = 0;
+        item.y = Math.random() * canvas.height;
+        }
+        });
+    }
+
+    function checkCollisions() {
+      cleanItems.forEach((cleanItem, cleanIndex) => {
+        if (isColliding(player, cleanItem)) {
+          cleanItems.splice(cleanIndex, 1);
+          game.score++;
+          cleanItems.push(createItem());
+        }
+      });
+
+      pollutionItems.forEach(pollutionItem => {
+        if (isColliding(player, pollutionItem)) {
+          game.isGameOver = true;
+        }
+      });
+    }
+
+    function isColliding(obj1, obj2) {
+      return (
+        obj1.x - obj1.width / 2 < obj2.x + obj2.width / 2 &&
+        obj1.x + obj1.width / 2 > obj2.x - obj2.width / 2 &&
+        obj1.y - obj1.height / 2 < obj2.y + obj2.height / 2 &&
+        obj1.y + obj1.height / 2 > obj2.y - obj2.height / 2
+      );
+    }
+
+    const keyState = {};
+
+    window.addEventListener('keydown', (e) => {
+      keyState[e.key] = true;
+    });
+
+    window.addEventListener('keyup', (e) => {
+      keyState[e.key] = false;
+    });
+
+    init();
+  </script>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
