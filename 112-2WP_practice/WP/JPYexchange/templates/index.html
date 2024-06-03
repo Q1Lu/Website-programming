@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title></title>
+    </head>
+    <body>
+        <div style="display: flex">
+            <div id="line-chart"style="width:600px;height:600px;" ></div>
+            <div id="line-chart2"style="width:600px;height:600px;" ></div>
+        </div>
+        <div id="exchangeData"style="visibility: hidden;">{{exchangeData}}</div>   <!--將資料藏在後端-->
+        <div id="exchangeData2"style="visibility: hidden;">{{exchangeData2}}</div>
+        <script src="https://cdn.plot.ly/plotly-2.24.1.min.js"></script>
+        <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+        <script src="{{ url_for('static', filename='js/usmain.js') }}"></script>
+    </body>
+</html>
+

@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title>
+
+        </title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="style.css">
+    </head>
+    <body>
+        <h1>
+            社團課程時間表
+        </h1>
+        <table id="courseTable"></table>
+        <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+        <script src="topic.js"></script>
+        <script src="main.js" ></script>
+
+        <div class="container">
+            <h2>Date and Time Range Calculator</h2>
+            <label for="startDateTime">Start Date and Time:</label>
+            <input type="datetime-local" id="startDateTime" onchange="calculate()">
+          
+            <label for="endDateTime">End Date and Time:</label>
+            <input type="datetime-local" id="endDateTime" onchange="calculate()">
+          
+            <div id="result"></div>
+        </div>
+          
+        <script>
+            function calculate() {
+              var startDateTime = new Date(document.getElementById('startDateTime').value);
+              var endDateTime = new Date(document.getElementById('endDateTime').value);
+            
+              // 计算日期间隔（毫秒数）
+              var timeDifference = endDateTime.getTime() - startDateTime.getTime();
+            
+              // 转换毫秒数为天数，并向上取整
+              var daysDifference = timeDifference / (1000 * 60 * 60 * 24);
+            
+              // 将向上取整后的天数留剩整数位再加1
+              var simCards = Math.trunc(daysDifference) + 1;
+            
+              // 输出结果，将 daysDifference 保留到小数点后三位
+              document.getElementById('result').innerHTML = "Total time required: " + daysDifference.toFixed(3) + " days.<br>You need to buy " + simCards + " SIM card(s).";
+            }
+        </script>
+          
+          
+    </body>
+</html>
